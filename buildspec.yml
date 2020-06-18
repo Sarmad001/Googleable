@@ -1,24 +1,18 @@
 version: 0.2
 
-env:
-  variables:
-    S3_BUCKET: "iot-sam-package-templates"
-
 phases:
-
-  install:
-    commands:
-      - pip install pytest
-
-  pre_build:
-    commands:
-      - pytest
-
   build:
     commands:
-      - aws cloudformation package --template-file template.yaml --s3-bucket $S3_BUCKET --output-template-file serverless-output.yaml
+      - echo 'Building SAM template...'
+      - sam build
+      - echo 'SAM template build complete'
+      - cd .aws-sam/build
+      - echo 'Packaging and uploading the template to iot-sam-package-templates bucket'
+      - sam package --template template.yaml --output-template-file template-output.yaml --s3-bucket iot-sam-package-templates
+      - echo 'Upload complete'
+      - echo 'Code build successful'
 
 artifacts:
   type: zip
   files:
-    - serverless-output.yaml
+    - .aws-sam/build/template-output.yaml
