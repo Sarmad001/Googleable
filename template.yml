@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  APIGatewayRestAPI:
+    Type: AWS::Serverless::Api
+    DependsOn: [DemoFunction]
+    Properties:
+      StageName: Demo
+      DefinitionBody:
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: openapi.json
+  DemoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DemoFunction
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorldApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET

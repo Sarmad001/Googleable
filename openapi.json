@@ -1,0 +1,27 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Demo",
+      "description": "Demo API for SAM",
+      "version": "1.0.0"
+    },
+    "paths": {
+        "/demo": {
+            "get": {
+                "x-amazon-apigateway-integration": {
+                    "uri":
+                      { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:DemoFunction/invocations" },
+                    "responses": {
+                      "default": {
+                        "statusCode": "200"
+                      }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "contentHandling": "CONVERT_TO_TEXT",
+                    "type": "aws_proxy"
+                  }
+            }
+        }
+    }
+}
